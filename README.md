@@ -89,10 +89,8 @@ This tutorial shows the exact steps needed to generate the build artifacts for t
   mkdir qt-build
   cd qt-build
 
-  ../qt-everywhere-src-5.11.2/configure.bat -platform win32-g++ -device linux-rasp-pi3-g++ -release -sysroot C:/SysGCC/raspberry/arm-linux-gnueabihf/sysroot -prefix /usr/local/qt5 -device-option "CROSS_COMPILE=arm-linux-gnueabihf-" -nomake examples -opensource -confirm-license -D __ARM_ARCH_6__
+  ../qt-everywhere-src-5.11.2/configure.bat -platform win32-g++ -device linux-rasp-pi3-g++ -release -sysroot C:/SysGCC/raspberry/arm-linux-gnueabihf/sysroot -prefix /usr/local/qt5 -device-option "CROSS_COMPILE=arm-linux-gnueabihf-" -nomake examples -opensource -confirm-license
   ```
-  *Note:<br>
-  It is important to use the `configure.bat` file if you are building on Windows! I also needed to add the `__ARM_ARCH_6__` define, the background can be found on the problem section.*
 5. After the configuration is done successfully we need to execute the build, within the `qt-build` directory, with the following command:<br>
 
   ```
@@ -120,65 +118,66 @@ This tutorial shows the exact steps needed to generate the build artifacts for t
 ## Problems
 Here are some issues I ran into. I am hoping by showing some problems and their solutions you guys can adapt the approaches to your problems.
 
-Here is an error which occurred during building after I created the configuration.
-```
-C:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtscript/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Platform.h:370:6: error: #error "Not supported ARM architecture"
- #    error "Not supported ARM architecture"
-      ^~~~~
-C:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtscript/src/3rdparty/javascriptcore/JavaScriptCore/pcre/pcre_compile.cpp: In function 'JSRegExp* jsRegExpCompile(const UChar*, int, JSRegExpIgnoreCaseOption, JSRegExpMultilineOption, unsigned int*, const char**)':
-C:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtscript/src/3rdparty/javascriptcore/JavaScriptCore/pcre/pcre_compile.cpp:2590:62: warning: cast from 'char*' to 'JSRegExp*' increases required alignment of target type [-Wcast-align]
-     JSRegExp* re = reinterpret_cast<JSRegExp*>(new char[size]);
-                                                              ^
-mingw32-make[3]: *** [Makefile:2612: obj/release/pcre_compile.obj] Error 1
-mingw32-make[3]: Leaving directory 'C:/SysGCC/raspberry/qt-build/qtscript/src/script'
-mingw32-make[2]: *** [Makefile:46: sub-script-make_first-ordered] Error 2
-mingw32-make[2]: Leaving directory 'C:/SysGCC/raspberry/qt-build/qtscript/src'
-mingw32-make[1]: *** [Makefile:47: sub-src-make_first] Error 2
-mingw32-make[1]: Leaving directory 'C:/SysGCC/raspberry/qt-build/qtscript'
-mingw32-make: *** [Makefile:1000: module-qtscript-make_first] Error 2
-```
+  - Here is an error which occurred during building after I created the configuration.<br>
+  ```
+  'C:\SysGCC\raspberry\qt-build\qtbase\bin\moc.exe' -DQT_NO_URL_CAST_FROM_STRING -DQT_NO_INTEGER_EVENT_COORDINATES -DQT_NO_FOREACH -DWTF_EXPORT_PRIVATE= -DJS_EXPORT_PRIVATE= -DENABLE_ASSEMBLER_WX_EXCLUSIVE=1 -DWTFReportAssertionFailure=qmlWTFReportAssertionFailure -DWTFReportAssertionFailureWithMessage=qmlWTFReportAssertionFailureWithMessage -DWTFReportBacktrace=qmlWTFReportBacktrace -DWTFInvokeCrashHook=qmlWTFInvokeCrashHook -DENABLE_LLINT=0 -DENABLE_DFG_JIT=0 -DENABLE_DFG_JIT_UTILITY_METHODS=1 -DENABLE_JIT_CONSTANT_BLINDING=0 -DBUILDING_QT__ -DWTF_USE_UDIS86=0 -DNDEBUG -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT -DQT_BUILD_QML_LIB -DQT_BUILDING_QT -DQT_NO_CAST_TO_ASCII -DQT_ASCII_CAST_WARNINGS -DQT_MOC_COMPAT -DQT_USE_QSTRINGBUILDER -DQT_DEPRECATED_WARNINGS -DQT_DISABLE_DEPRECATED_BEFORE=0x050000 -DQT_NO_EXCEPTIONS -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -D__ARM_ARCH_6__ --include C:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml/.moc/moc_predefs.h -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/mkspecs/devices/linux-rasp-pi3-g++ -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/memory -IC:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/compiler -IC:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/jsruntime -IC:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/jit -IC:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/debugger -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/animations -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/jit -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/assembler -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/runtime -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/wtf -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/stubs -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/stubs/wtf -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/disassembler -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/disassembler/udis86 -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/.generated -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/include -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/include/QtQml -IC:/SysGCC/raspberry/qt-build/qtdeclarative/include -IC:/SysGCC/raspberry/qt-build/qtdeclarative/include/QtQml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/include/QtQml/5.11.2 -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/include/QtQml/5.11.2/QtQml -IC:/SysGCC/raspberry/qt-build/qtdeclarative/include/QtQml/5.11.2 -IC:/SysGCC/raspberry/qt-build/qtdeclarative/include/QtQml/5.11.2/QtQml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include/QtCore/5.11.2 -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include/QtCore/5.11.2/QtCore -IC:/SysGCC/raspberry/qt-build/qtbase/include/QtCore/5.11.2 -IC:/SysGCC/raspberry/qt-build/qtbase/include/QtCore/5.11.2/QtCore -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include/QtNetwork -IC:/SysGCC/raspberry/qt-build/qtbase/include -IC:/SysGCC/raspberry/qt-build/qtbase/include/QtNetwork -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include/QtCore -IC:/SysGCC/raspberry/qt-build/qtbase/include/QtCore -I. -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/include/c++/6 -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/include/c++/6/backward -Ic:/sysgcc/raspberry/lib/gcc/arm-linux-gnueabihf/6/include -Ic:/sysgcc/raspberry/lib/gcc/arm-linux-gnueabihf/6/include-fixed -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/include -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/include/arm-linux-gnueabihf/c++/6 -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/sysroot/usr/include/arm-linux-gnueabihf -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/sysroot/usr/include C:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/util/qqmladaptormodel.cpp -o .moc/qqmladaptormodel.moc
+  mingw32-make[2]: *** [Makefile:12064: .moc/qqmladaptormodel.moc] Error -1073741701
+  mingw32-make[2]: Leaving directory 'C:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml'
+  mingw32-make[1]: *** [Makefile:53: sub-qml-make_first-ordered] Error 2
+  mingw32-make[1]: Leaving directory 'C:/SysGCC/raspberry/qt-build/qtdeclarative/src'
+  mingw32-make: *** [Makefile:48: sub-src-make_first] Error 2
+  ```
 
-I googled "Not supported ARM architecture" and found this [link](https://forum.qt.io/topic/76214.rss)
-  which suggests:
-  * Start QEMU with the Raspberry Pi 3 image and run:<br>
-    `$ cat /proc/cpuinfo`
-    Take a look at the model name e.g. `ARMv6-compatible processor rev 7 (v61)`<br>
-  * Search for `ARM_ARCH_5TEJ` within `Platform.h` and look for a similar define as your model name e.g. `__ARM_ARCH_6__`
+  I used `err.exe` to resolve the error code.
 
-Here is another error, which also occurred while building.<br>
+  ```
+  C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin>err.exe -1073741701
+  # for decimal -1073741701 / hex 0xc000007b
+    STATUS_INVALID_IMAGE_FORMAT                                    ntstatus.h
+  # {Bad Image}
+  # %hs is either not designed to run on Windows or it contains
+  # an error. Try installing the program again using the
+  # original installation media or contact your system
+  # administrator or the software vendor for support.
+  # as an HRESULT: Severity: FAILURE (1), FACILITY_NULL (0x0), Code 0x7b
+  # for decimal 123 / hex 0x7b
+    ERROR_INVALID_NAME                                             winerror.h
+  # The filename, directory name, or volume label syntax is
+  # incorrect.
+  # 2 matches found for "-1073741701"
+  ```
 
-```
-'C:\SysGCC\raspberry\qt-build\qtbase\bin\moc.exe' -DQT_NO_URL_CAST_FROM_STRING -DQT_NO_INTEGER_EVENT_COORDINATES -DQT_NO_FOREACH -DWTF_EXPORT_PRIVATE= -DJS_EXPORT_PRIVATE= -DENABLE_ASSEMBLER_WX_EXCLUSIVE=1 -DWTFReportAssertionFailure=qmlWTFReportAssertionFailure -DWTFReportAssertionFailureWithMessage=qmlWTFReportAssertionFailureWithMessage -DWTFReportBacktrace=qmlWTFReportBacktrace -DWTFInvokeCrashHook=qmlWTFInvokeCrashHook -DENABLE_LLINT=0 -DENABLE_DFG_JIT=0 -DENABLE_DFG_JIT_UTILITY_METHODS=1 -DENABLE_JIT_CONSTANT_BLINDING=0 -DBUILDING_QT__ -DWTF_USE_UDIS86=0 -DNDEBUG -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT -DQT_BUILD_QML_LIB -DQT_BUILDING_QT -DQT_NO_CAST_TO_ASCII -DQT_ASCII_CAST_WARNINGS -DQT_MOC_COMPAT -DQT_USE_QSTRINGBUILDER -DQT_DEPRECATED_WARNINGS -DQT_DISABLE_DEPRECATED_BEFORE=0x050000 -DQT_NO_EXCEPTIONS -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -D__ARM_ARCH_6__ --include C:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml/.moc/moc_predefs.h -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/mkspecs/devices/linux-rasp-pi3-g++ -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/memory -IC:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/compiler -IC:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/jsruntime -IC:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/jit -IC:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/debugger -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/animations -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/jit -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/assembler -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/runtime -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/wtf -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/stubs -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/stubs/wtf -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/disassembler -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/3rdparty/masm/disassembler/udis86 -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/.generated -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/include -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/include/QtQml -IC:/SysGCC/raspberry/qt-build/qtdeclarative/include -IC:/SysGCC/raspberry/qt-build/qtdeclarative/include/QtQml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/include/QtQml/5.11.2 -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/include/QtQml/5.11.2/QtQml -IC:/SysGCC/raspberry/qt-build/qtdeclarative/include/QtQml/5.11.2 -IC:/SysGCC/raspberry/qt-build/qtdeclarative/include/QtQml/5.11.2/QtQml -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include/QtCore/5.11.2 -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include/QtCore/5.11.2/QtCore -IC:/SysGCC/raspberry/qt-build/qtbase/include/QtCore/5.11.2 -IC:/SysGCC/raspberry/qt-build/qtbase/include/QtCore/5.11.2/QtCore -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include/QtNetwork -IC:/SysGCC/raspberry/qt-build/qtbase/include -IC:/SysGCC/raspberry/qt-build/qtbase/include/QtNetwork -IC:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase/include/QtCore -IC:/SysGCC/raspberry/qt-build/qtbase/include/QtCore -I. -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/include/c++/6 -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/include/c++/6/backward -Ic:/sysgcc/raspberry/lib/gcc/arm-linux-gnueabihf/6/include -Ic:/sysgcc/raspberry/lib/gcc/arm-linux-gnueabihf/6/include-fixed -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/include -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/include/arm-linux-gnueabihf/c++/6 -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/sysroot/usr/include/arm-linux-gnueabihf -Ic:/sysgcc/raspberry/arm-linux-gnueabihf/sysroot/usr/include C:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtdeclarative/src/qml/util/qqmladaptormodel.cpp -o .moc/qqmladaptormodel.moc
-mingw32-make[2]: *** [Makefile:12064: .moc/qqmladaptormodel.moc] Error -1073741701
-mingw32-make[2]: Leaving directory 'C:/SysGCC/raspberry/qt-build/qtdeclarative/src/qml'
-mingw32-make[1]: *** [Makefile:53: sub-qml-make_first-ordered] Error 2
-mingw32-make[1]: Leaving directory 'C:/SysGCC/raspberry/qt-build/qtdeclarative/src'
-mingw32-make: *** [Makefile:48: sub-src-make_first] Error 2
-```
+  Turns out that the error code `-1073741701 = 0x000007b` is translated to `ERROR_INVALID_NAME`. The reason for this particular error was using double forward slashes `//`, notice also the inconsistent use of them for the -prefix argument `-prefix //usr//local/qt5`:<br>
+  ```
+  ../qt-everywhere-src-5.11.2/configure.bat -platform win32-g++ -device linux-rasp-pi3-g++ -release -sysroot C://SysGCC//raspberry//arm-linux-gnueabihf//sysroot -prefix //usr//local/qt5 -device-option "CROSS_COMPILE=arm-linux-gnueabihf-" -nomake examples -opensource -confirm-license
+  ```
 
-I used `err.exe` to resolve the error code.
+- Here is a different error I encountered so far:<br>
+```
+pi@raspberrypi:/usr/local/qt5/bin $ ./qtdiag
+Illegal instruction
+```
+This is the output I get when I execute the application in gdb:<br>
+  ```
+  and "show warranty" for details.
+  This GDB was configured as "arm-linux-gnueabihf".
+  Type "show configuration" for configuration details.
+  For bug reporting instructions, please see:
+  <http://www.gnu.org/software/gdb/bugs/>.
+  Find the GDB manual and other documentation resources online at:
+  <http://www.gnu.org/software/gdb/documentation/>.
+  For help, type "help".
+  Type "apropos word" to search for commands related to "word"...
+  Reading symbols from qtdiag...(no debugging symbols found)...done.
+  (gdb) r
+  Starting program: /usr/local/qt5/bin/qtdiag
+  [Thread debugging using libthread_db enabled]
+  Using host libthread_db library "/lib/arm-linux-gnueabihf/libthread_db.so.1".
 
-```
-C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin>err.exe -1073741701
-# for decimal -1073741701 / hex 0xc000007b
-  STATUS_INVALID_IMAGE_FORMAT                                    ntstatus.h
-# {Bad Image}
-# %hs is either not designed to run on Windows or it contains
-# an error. Try installing the program again using the
-# original installation media or contact your system
-# administrator or the software vendor for support.
-# as an HRESULT: Severity: FAILURE (1), FACILITY_NULL (0x0), Code 0x7b
-# for decimal 123 / hex 0x7b
-  ERROR_INVALID_NAME                                             winerror.h
-# The filename, directory name, or volume label syntax is
-# incorrect.
-# 2 matches found for "-1073741701"
-```
-
-Turns out that the error code `-1073741701 = 0x000007b` is translated to `ERROR_INVALID_NAME`. The reason for this particular error was using double forward slashes `//`, notice also the inconsistent use of them for the -prefix argument `-prefix //usr//local/qt5`:<br>
-```
-../qt-everywhere-src-5.11.2/configure.bat -platform win32-g++ -device linux-rasp-pi3-g++ -release -sysroot C://SysGCC//raspberry//arm-linux-gnueabihf//sysroot -prefix //usr//local/qt5 -device-option "CROSS_COMPILE=arm-linux-gnueabihf-" -nomake examples -opensource -confirm-license -D __ARM_ARCH_6__
-```
+  Program received signal SIGILL, Illegal instruction.
+  0xb610cb30 in qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsign
+  ed char const*) () from /usr/local/qt5/lib/libQt5Core.so.5
+  ```
 
 ## Special thanks to
 I thank [etiennedm](https://forum.qt.io/topic/68381/cross-compile-qt-windows-to-raspberry-3), for an awesome article which I used as a starting point. Also thanks to the people from [visualgdb.com](https://visualgdb.com/tutorials/raspberry/qt/embedded/).
