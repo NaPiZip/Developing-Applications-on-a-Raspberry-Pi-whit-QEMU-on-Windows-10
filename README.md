@@ -1,9 +1,9 @@
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Qt_logo_2016.svg/1200px-Qt_logo_2016.svg.png" alt="Qt_Logo" height="42px" width="42px" align="left">
+somehow<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Qt_logo_2016.svg/1200px-Qt_logo_2016.svg.png" alt="Qt_Logo" height="42px" width="42px" align="left">
 <img src="https://upload.wikimedia.org/wikipedia/de/thumb/c/cb/Raspberry_Pi_Logo.svg/1200px-Raspberry_Pi_Logo.svg.png" alt="Raspberry_Pi_Logo" height="42px" width="42px" align="left">
 <img src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.raspberry.tips%2F2015%2F04%2FQemu-logo21.png&f=1" alt="QEMU_Logo" height="42px" width="42px" align="left">
 <img src="https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fseeklogo.com%2Fimages%2FW%2Fwindows-10-icon-logo-5BC5C69712-seeklogo.com.png&f=1" alt="Windows_10_Logo" height="42px" width="42px" align="left"><br>
 
-# Developing Applications on a Raspberry Pi 3 whit QEMU on Windows 10
+# Developing Applications on a Raspberry Pi with QEMU on Windows 10
 <div>
     <a href="https://github.com/NaPiZip/Docker_GUI_Apps_on_Windows">
         <img src="https://img.shields.io/badge/Document%20Version-0.0.1-green.svg"/>
@@ -89,8 +89,9 @@ This tutorial shows the exact steps needed to generate the build artifacts for t
   mkdir qt-build
   cd qt-build
 
-  ../qt-everywhere-src-5.11.2/configure.bat -platform win32-g++ -device linux-rasp-pi3-g++ -release -sysroot C:/SysGCC/raspberry/arm-linux-gnueabihf/sysroot -prefix /usr/local/qt5 -device-option "CROSS_COMPILE=arm-linux-gnueabihf-" -nomake examples -opensource -confirm-license
+  ../qt-everywhere-src-5.11.2/configure -platform win32-g++ -device linux-rasp-pi3-g++ -release -sysroot C:/SysGCC/raspberry/arm-linux-gnueabihf/sysroot -prefix /usr/local/qt5 -device-option "CROSS_COMPILE=arm-linux-gnueabihf-" -nomake examples -opensource -confirm-license
   ```
+
 5. After the configuration is done successfully we need to execute the build, within the `qt-build` directory, with the following command:<br>
 
   ```
@@ -178,7 +179,31 @@ This is the output I get when I execute the application in gdb:<br>
   0xb610cb30 in qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsign
   ed char const*) () from /usr/local/qt5/lib/libQt5Core.so.5
   ```
+- One major problem I encountered is that for some reason the install path is somehow not correct. Take a look at the `qt.conf`, the `DevicePaths`, `Prefix` and `HostPrefix` are not correct, since they are not absolute and the `HostPath` contains the local drive.<br>
+  ```
+  [EffectivePaths]
+  Prefix=..
+  [DevicePaths]
+  Prefix=C:/usr/local/qt5
+  [Paths]
+  Prefix=C:/usr/local/qt5
+  HostPrefix=C:/SysGCC/raspberry/arm-linux-gnueabihf/sysrootC:/usr/local/qt5
+  Sysroot=C:/SysGCC/raspberry/arm-linux-gnueabihf/sysroot
+  SysrootifyPrefix=true
+  TargetSpec=devices/linux-rasp-pi-g++
+  HostSpec=win32-g++
+  [EffectiveSourcePaths]
+  Prefix=C:/SysGCC/raspberry/qt-everywhere-src-5.11.2/qtbase
+  ```
+  This leads to the fact, that some environment variables need to be set in order to run Qt applications, I used the folowing commands to resolve that issue:<br>
+  ```
+  #!/bin/bash
 
+  export LD_LIBRARY_PATH=/usr/local/qt5/lib
+  export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/local/qt5/plugins/platforms
+  export QT_QPA_FONTDIR=/user/share/fonts
+  sudo ldconfig
+  ```
 ## Special thanks to
 I thank [etiennedm](https://forum.qt.io/topic/68381/cross-compile-qt-windows-to-raspberry-3), for an awesome article which I used as a starting point. Also thanks to the people from [visualgdb.com](https://visualgdb.com/tutorials/raspberry/qt/embedded/).
 
