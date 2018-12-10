@@ -128,9 +128,7 @@ Here are some issues I ran into. I am hoping by showing some problems and their 
   mingw32-make[1]: Leaving directory 'C:/SysGCC/raspberry/qt-build/qtdeclarative/src'
   mingw32-make: *** [Makefile:48: sub-src-make_first] Error 2
   ```
-
   I used `err.exe` to resolve the error code.
-
   ```
   C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin>err.exe -1073741701
   # for decimal -1073741701 / hex 0xc000007b
@@ -147,18 +145,17 @@ Here are some issues I ran into. I am hoping by showing some problems and their 
   # incorrect.
   # 2 matches found for "-1073741701"
   ```
-
   Turns out that the error code `-1073741701 = 0x000007b` is translated to `ERROR_INVALID_NAME`. The reason for this particular error was using double forward slashes `//`, notice also the inconsistent use of them for the -prefix argument `-prefix //usr//local/qt5`:<br>
   ```
   ../qt-everywhere-src-5.11.2/configure.bat -platform win32-g++ -device linux-rasp-pi3-g++ -release -sysroot C://SysGCC//raspberry//arm-linux-gnueabihf//sysroot -prefix //usr//local/qt5 -device-option "CROSS_COMPILE=arm-linux-gnueabihf-" -nomake examples -opensource -confirm-license
   ```
 
 - Here is a different error I encountered so far:<br>
-```
-pi@raspberrypi:/usr/local/qt5/bin $ ./qtdiag
-Illegal instruction
-```
-This is the output I get when I execute the application in gdb:<br>
+  ```
+  pi@raspberrypi:/usr/local/qt5/bin $ ./qtdiag
+  Illegal instruction
+  ```
+  This is the output I get when I execute the application in gdb:<br>
   ```
   and "show warranty" for details.
   This GDB was configured as "arm-linux-gnueabihf".
