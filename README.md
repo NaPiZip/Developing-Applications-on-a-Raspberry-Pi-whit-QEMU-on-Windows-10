@@ -176,6 +176,7 @@ Here are some issues I ran into. I am hoping by showing some problems and their 
   0xb610cb30 in qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsign
   ed char const*) () from /usr/local/qt5/lib/libQt5Core.so.5
   ```
+
 - One major problem I encountered is that for some reason the install path is somehow not correct. Take a look at the `qt.conf`, the `DevicePaths`, `Prefix` and `HostPrefix` are not correct, since they are not absolute and the `HostPath` contains the local drive.<br>
   ```
   [EffectivePaths]
